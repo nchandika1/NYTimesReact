@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import DeleteBtn from "../../components/DeleteBtn";
-import Jumbotron from "../../components/Jumbotron";
 import API from "../../utils/API";
-import { Link } from "react-router-dom";
-import { Col, Row, Container } from "../../components/Grid";
+import { Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/List";
-import { Input, TextArea, FormBtn } from "../../components/Form";
+import { Input, FormBtn } from "../../components/Form";
 
 class Articles extends Component {
   state = {
@@ -14,12 +12,11 @@ class Articles extends Component {
     query: "",
     start: "",
     end: "",
-    num: 5
+    num: 10
   };
 
   componentDidMount() {
     this.loadArticles();
-    console.log(this.state.articles);
   }
 
   loadArticles = () => {
@@ -30,14 +27,11 @@ class Articles extends Component {
       .catch(err => console.log(err));
   };
 
-  
-
   searchArticles = query => {
     API.searchArticles(query)
       .then(res => {
         const results = res.data.response.docs;
         this.setState({ results: results })
-        console.log(this.state.results);
       })
       .catch(err => console.log(err));
   }
@@ -58,6 +52,7 @@ class Articles extends Component {
         end: this.state.end,
         num: this.state.num
       };
+      console.log(searchObj);
       this.searchArticles(searchObj);
     }
   }
@@ -90,51 +85,55 @@ class Articles extends Component {
   displaySavedArticle = article => {
     return <ListItem key={article._id}>
             <strong><a href={article.url} target="_blank">{article.title}</a></strong>
-            <p>{article.date}</p>
+            <p>Published on: {article.date}</p>
             <DeleteBtn onClick={() => this.deleteArticle(article._id)} />
     </ListItem>;
   }
 
   render() {
     return (
-      <Container fluid>
+      <Container>
         <Row>
-          <h1>Search Articles</h1>
-          <form>
-              <Input
-                value={this.state.query}
-                onChange={this.handleInputChange}
-                name="query"
-                placeholder="Query string (required)"
-              />
-              <Input
-                value={this.state.start}
-                onChange={this.handleInputChange}
-                name="start"
-                placeholder="Start Date (Optional)"
-              />
-              <Input
-                value={this.state.end}
-                onChange={this.handleInputChange}
-                name="end"
-                placeholder="End Date (Optional)"
-              />
-              <Input
-                value={this.state.num}
-                onChange={this.handleInputChange}
-                name="num"
-                placeholder="Number of Articles (Default 10)"
-              />
-              <FormBtn
-                disabled={!(this.state.query)}
-                onClick={this.handleFormSubmit}
-              >
-                Search
-              </FormBtn>
-            </form>
+          <h2>Search Articles</h2>
+          <form className="form form-horizontal">
+            <Input
+              value={this.state.query}
+              onChange={this.handleInputChange}
+              name="query"
+              placeholder="Query string (required)"
+            />
+            <Input
+              value={this.state.start}
+              onChange={this.handleInputChange}
+              name="start"
+              placeholder="Start Date (Optional)"
+            />
+            <Input
+              value={this.state.end}
+              onChange={this.handleInputChange}
+              name="end"
+              placeholder="End Date (Optional)"
+            />
+            {/* No need to track number of articles for this homework
+              * But want to keep the code here for future reference
+
+            <SelectList
+              value={this.state.num}
+              onChange={this.handleInputChange}
+              name="num"
+            />
+            */}
+
+            <FormBtn
+              disabled={!(this.state.query)}
+              onClick={this.handleFormSubmit}
+            >
+              Search
+            </FormBtn>
+          </form>
         </Row>
         <Row>
-          <h1>Search Results</h1>
+          <h2>Search Results</h2>
           <List>
             {this.state.results.length ? (
                 this.state.results.map(item => this.displaySearchArticle(item))
@@ -144,8 +143,9 @@ class Articles extends Component {
             }
           </List>
         </Row>
+        <Row></Row>
         <Row>
-          <h1>Saved Articles go here</h1>
+          <h2>Saved Articles</h2>
           {this.state.articles.length ? (
               <List>
                 { this.state.articles.map(article => (this.displaySavedArticle(article))) }

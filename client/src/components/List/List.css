@@ -24,6 +24,11 @@
   color: #2A878C;
 }
 
+.list-overflow-container li p {
+  color: black;
+  cursor: auto;
+}
+
 .list-overflow-container li:first-child {
   border-top: none;
 }

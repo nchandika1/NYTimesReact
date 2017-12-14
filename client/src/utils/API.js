@@ -22,7 +22,9 @@ export default {
   },
   // Search for NYT Articles
   searchArticles: function(query) {
-    var queryStr = qs.stringify({ q: query.title, begin_date: query.start+'0101', end_date: query.end+'0101', sort: 'newest'});
+    var queryStr = qs.stringify({ q: query.query, begin_date: query.start+'0101', end_date: query.end+'0101'});
+    console.log(queryStr);
     return axios.get(BASEURL + queryStr + APIKEY);
   }
 };
+
